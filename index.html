@@ -37,7 +37,11 @@
 <body>
   <h1>🇺🇸 President Math Game 🇺🇸</h1>
   <button onclick="playGame()">Random Add Presidents</button>
-  <button onclick="showSolution()" id="solutionButton" style="display:none;">Show Solution</button>
+  
+    <button onclick="showHint()" id="hintButton" style="display:none;">Hint</button>
+    <button onclick="showChoices()" id="choiceButton" style="display:none;">More Hints</button>
+    <button onclick="showSolution()" id="solutionButton" style="display:none;">Show Solution</button>
+    
   <div id="result" class="result">Click the button to play!</div>
 
   <script>
@@ -268,6 +272,8 @@
 
       document.getElementById("result").innerHTML = resultHTML;
       document.getElementById("solutionButton").style.display = "inline-block";
+document.getElementById("hintButton").style.display = "inline-block";
+document.getElementById("choiceButton").style.display = "inline-block";
     }
 
     function showSolution() {
@@ -300,6 +306,28 @@
       document.getElementById("result").innerHTML = message;
       document.getElementById("solutionButton").style.display = "none";
     }
-  </script>
+  
+    function showHint() {
+      document.getElementById("result").innerHTML += `<p><em>Hint: The total is ${currentSum}</em></p>`;
+      document.getElementById("hintButton").style.display = "none";
+    }
+
+    function showChoices() {
+      const options = [currentSum];
+      while (options.length < 4) {
+        const rand = Math.floor(Math.random() * 47) + 1;
+        if (!options.includes(rand)) options.push(rand);
+      }
+      options.sort(() => Math.random() - 0.5);
+      let choiceHTML = "<p><strong>Which president is number " + currentSum + "?</strong></p>";
+      options.forEach(opt => {
+        const name = presidents.find(p => p.number === opt)?.name || "Unknown";
+        choiceHTML += `<button onclick="alert('${name} is President #${opt}')">${name}</button><br>`;
+      });
+      document.getElementById("result").innerHTML += choiceHTML;
+      document.getElementById("choiceButton").style.display = "none";
+    }
+    </script>
+    
 </body>
 </html>
