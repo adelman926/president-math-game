@@ -1,0 +1,366 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>President Math Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f0f0f0;
+    }
+    button {
+      padding: 16px 28px;
+      font-size: 18px;
+      margin: 12px;
+      border-radius: 10px;
+      background-color: #2b6cb0;
+      color: white;
+      border: none;
+    }
+    .result {
+      background: white;
+      padding: 20px;
+      margin-top: 20px;
+      display: inline-block;
+      border-radius: 8px;
+    }
+    img {
+      width: 120px;
+      border-radius: 50%;
+      border: 3px solid #ccc;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body>
+  <h1>🇺🇸 President Math Game</h1>
+  <div class="button-bar">
+    <button onclick="playGame()">Start</button>
+    <button onclick="showHint()" id="hintButton" style="display:none;">Hint</button>
+    <button onclick="showChoices()" id="choiceButton" style="display:none;">More Hints</button>
+    <button onclick="showSolution()" id="solutionButton" style="display:none;">Show Solution</button>
+  </div>
+  <div id="result" class="result">Click Start to begin!</div>
+
+  <script>
+    const presidents = [
+  {
+    "number": 1,
+    "name": "George Washington"
+  },
+  {
+    "number": 2,
+    "name": "John Adams"
+  },
+  {
+    "number": 3,
+    "name": "Thomas Jefferson"
+  },
+  {
+    "number": 4,
+    "name": "James Madison"
+  },
+  {
+    "number": 5,
+    "name": "James Monroe"
+  },
+  {
+    "number": 6,
+    "name": "John Quincy Adams"
+  },
+  {
+    "number": 7,
+    "name": "Andrew Jackson"
+  },
+  {
+    "number": 8,
+    "name": "Martin Van Buren"
+  },
+  {
+    "number": 9,
+    "name": "William Henry Harrison"
+  },
+  {
+    "number": 10,
+    "name": "John Tyler"
+  },
+  {
+    "number": 11,
+    "name": "James K. Polk"
+  },
+  {
+    "number": 12,
+    "name": "Zachary Taylor"
+  },
+  {
+    "number": 13,
+    "name": "Millard Fillmore"
+  },
+  {
+    "number": 14,
+    "name": "Franklin Pierce"
+  },
+  {
+    "number": 15,
+    "name": "James Buchanan"
+  },
+  {
+    "number": 16,
+    "name": "Abraham Lincoln"
+  },
+  {
+    "number": 17,
+    "name": "Andrew Johnson"
+  },
+  {
+    "number": 18,
+    "name": "Ulysses S. Grant"
+  },
+  {
+    "number": 19,
+    "name": "Rutherford B. Hayes"
+  },
+  {
+    "number": 20,
+    "name": "James A. Garfield"
+  },
+  {
+    "number": 21,
+    "name": "Chester A. Arthur"
+  },
+  {
+    "number": 22,
+    "name": "Grover Cleveland"
+  },
+  {
+    "number": 23,
+    "name": "Benjamin Harrison"
+  },
+  {
+    "number": 24,
+    "name": "Grover Cleveland"
+  },
+  {
+    "number": 25,
+    "name": "William McKinley"
+  },
+  {
+    "number": 26,
+    "name": "Theodore Roosevelt"
+  },
+  {
+    "number": 27,
+    "name": "William Howard Taft"
+  },
+  {
+    "number": 28,
+    "name": "Woodrow Wilson"
+  },
+  {
+    "number": 29,
+    "name": "Warren G. Harding"
+  },
+  {
+    "number": 30,
+    "name": "Calvin Coolidge"
+  },
+  {
+    "number": 31,
+    "name": "Herbert Hoover"
+  },
+  {
+    "number": 32,
+    "name": "Franklin D. Roosevelt"
+  },
+  {
+    "number": 33,
+    "name": "Harry S. Truman"
+  },
+  {
+    "number": 34,
+    "name": "Dwight D. Eisenhower"
+  },
+  {
+    "number": 35,
+    "name": "John F. Kennedy"
+  },
+  {
+    "number": 36,
+    "name": "Lyndon B. Johnson"
+  },
+  {
+    "number": 37,
+    "name": "Richard Nixon"
+  },
+  {
+    "number": 38,
+    "name": "Gerald Ford"
+  },
+  {
+    "number": 39,
+    "name": "Jimmy Carter"
+  },
+  {
+    "number": 40,
+    "name": "Ronald Reagan"
+  },
+  {
+    "number": 41,
+    "name": "George H. W. Bush"
+  },
+  {
+    "number": 42,
+    "name": "Bill Clinton"
+  },
+  {
+    "number": 43,
+    "name": "George W. Bush"
+  },
+  {
+    "number": 44,
+    "name": "Barack Obama"
+  },
+  {
+    "number": 45,
+    "name": "Donald Trump"
+  },
+  {
+    "number": 46,
+    "name": "Joe Biden"
+  },
+  {
+    "number": 47,
+    "name": "Donald Trump"
+  }
+];
+    const presidentImages = {
+  "1": "https://upload.wikimedia.org/wikipedia/commons/6/6f/George_Washington_by_Gilbert_Stuart%2C_1797.jpg",
+  "2": "https://upload.wikimedia.org/wikipedia/commons/8/84/John_Adams_by_John_Trumbull%2C_c._1792.jpg",
+  "3": "https://upload.wikimedia.org/wikipedia/commons/1/1e/Thomas_Jefferson_by_Rembrandt_Peale%2C_1800.jpg",
+  "4": "https://upload.wikimedia.org/wikipedia/commons/1/1d/James_Madison.jpg",
+  "5": "https://upload.wikimedia.org/wikipedia/commons/7/7c/James_Monroe_White_House_portrait_1819.jpg",
+  "6": "https://upload.wikimedia.org/wikipedia/commons/4/4c/John_Quincy_Adams.jpg",
+  "7": "https://upload.wikimedia.org/wikipedia/commons/4/43/Andrew_jackson_head.jpg",
+  "8": "https://upload.wikimedia.org/wikipedia/commons/1/14/Martin_Van_Buren_edit.jpg",
+  "9": "https://upload.wikimedia.org/wikipedia/commons/2/22/William_Henry_Harrison.jpg",
+  "10": "https://upload.wikimedia.org/wikipedia/commons/d/d7/John_Tyler_by_George_P.A._Healy.jpg",
+  "11": "https://upload.wikimedia.org/wikipedia/commons/2/2e/James_Polk_restored.jpg",
+  "12": "https://upload.wikimedia.org/wikipedia/commons/f/fd/Zachary_Taylor_restored_and_cropped.jpg",
+  "13": "https://upload.wikimedia.org/wikipedia/commons/2/23/Millard_Fillmore.jpg",
+  "14": "https://upload.wikimedia.org/wikipedia/commons/2/2f/Franklin_Pierce_by_Mathew_Brady_restored.jpg",
+  "15": "https://upload.wikimedia.org/wikipedia/commons/d/d9/James_Buchanan.jpg",
+  "16": "https://upload.wikimedia.org/wikipedia/commons/a/aa/Abraham_Lincoln_O-77_matte_collodion_print.jpg",
+  "17": "https://upload.wikimedia.org/wikipedia/commons/e/ef/Andrew_Johnson_photo_portrait_head_and_shoulders%2C_c1870-1880-Edit1.jpg",
+  "18": "https://upload.wikimedia.org/wikipedia/commons/5/50/Ulysses_S._Grant_1870-1880.jpg",
+  "19": "https://upload.wikimedia.org/wikipedia/commons/1/1a/Rutherford_Hayes_1870_-_1880_Restored.jpg",
+  "20": "https://upload.wikimedia.org/wikipedia/commons/f/f3/James_Abram_Garfield%2C_photo_portrait_seated.jpg",
+  "21": "https://upload.wikimedia.org/wikipedia/commons/4/4b/Chester_Alan_Arthur.jpg",
+  "22": "https://upload.wikimedia.org/wikipedia/commons/5/55/Grover_Cleveland_-_NARA_-_518139_%28cropped%29.jpg",
+  "23": "https://upload.wikimedia.org/wikipedia/commons/9/91/Benjamin_Harrison_by_KN_Johnson%2C_1896.jpg",
+  "24": "https://upload.wikimedia.org/wikipedia/commons/5/55/Grover_Cleveland_-_NARA_-_518139_%28cropped%29.jpg",
+  "25": "https://upload.wikimedia.org/wikipedia/commons/4/44/Mckinley.jpg",
+  "26": "https://upload.wikimedia.org/wikipedia/commons/5/5c/President_Theodore_Roosevelt%2C_1904.jpg",
+  "27": "https://upload.wikimedia.org/wikipedia/commons/9/95/William_Howard_Taft_1909.jpg",
+  "28": "https://upload.wikimedia.org/wikipedia/commons/4/45/President_Woodrow_Wilson_portrait_December_2_1912.jpg",
+  "29": "https://upload.wikimedia.org/wikipedia/commons/5/5c/Warren_G_Harding-Harris_%26_Ewing.jpg",
+  "30": "https://upload.wikimedia.org/wikipedia/commons/5/56/Calvin_Coolidge_cph.3g10777.jpg",
+  "31": "https://upload.wikimedia.org/wikipedia/commons/1/1e/Herbert_Hoover_1928.jpg",
+  "32": "https://upload.wikimedia.org/wikipedia/commons/f/fd/FDR_1944_Color_Portrait.jpg",
+  "33": "https://upload.wikimedia.org/wikipedia/commons/e/e5/Harry_S._Truman.jpg",
+  "34": "https://upload.wikimedia.org/wikipedia/commons/5/52/Dwight_D._Eisenhower%2C_official_photo_portrait%2C_May_29%2C_1959.jpg",
+  "35": "https://upload.wikimedia.org/wikipedia/commons/2/2e/John_F._Kennedy%2C_White_House_color_photo_portrait.jpg",
+  "36": "https://upload.wikimedia.org/wikipedia/commons/5/50/Lyndon_B._Johnson%2C_photo_portrait_by_Arnold_Newman%2C_1964.jpg",
+  "37": "https://upload.wikimedia.org/wikipedia/commons/3/33/Richard_Nixon_presidential_portrait.jpg",
+  "38": "https://upload.wikimedia.org/wikipedia/commons/6/66/Gerald_Ford_presidential_portrait.jpg",
+  "39": "https://upload.wikimedia.org/wikipedia/commons/d/d0/JimmyCarterPortrait2.jpg",
+  "40": "https://upload.wikimedia.org/wikipedia/commons/1/16/Official_Portrait_of_President_Reagan_1981.jpg",
+  "41": "https://upload.wikimedia.org/wikipedia/commons/5/5f/George_H._W._Bush%2C_president_of_the_United_States%2C_1989_official_portrait.jpg",
+  "42": "https://upload.wikimedia.org/wikipedia/commons/d/d3/Bill_Clinton.jpg",
+  "43": "https://upload.wikimedia.org/wikipedia/commons/d/d4/George-W-Bush.jpeg",
+  "44": "https://upload.wikimedia.org/wikipedia/commons/8/8d/President_Barack_Obama.jpg",
+  "45": "https://upload.wikimedia.org/wikipedia/commons/5/56/Donald_Trump_official_portrait.jpg",
+  "46": "https://upload.wikimedia.org/wikipedia/commons/6/68/Joe_Biden_presidential_portrait.jpg",
+  "47": "https://upload.wikimedia.org/wikipedia/commons/5/56/Donald_Trump_official_portrait.jpg"
+};
+
+    let currentP1, currentP2, currentSum;
+
+    function getRandomPresident() {
+      return presidents[Math.floor(Math.random() * presidents.length)];
+    }
+
+    function playGame() {
+      let p1, p2, sum;
+      do {
+        p1 = getRandomPresident();
+        p2 = getRandomPresident();
+        sum = p1.number + p2.number;
+      } while (sum > 47);
+
+      currentP1 = p1;
+      currentP2 = p2;
+      currentSum = sum;
+
+      const html = `
+        <div style="display:flex;justify-content:center;gap:20px;">
+          <div><img src="${presidentImages[p1.number]}" alt=""><br><strong>${p1.name}</strong></div>
+          <div style="font-size: 32px; font-weight: bold;">+</div>
+          <div><img src="${presidentImages[p2.number]}" alt=""><br><strong>${p2.name}</strong></div>
+        </div>
+        <p><strong>Total:</strong> ???</p>
+      `;
+      document.getElementById("result").innerHTML = html;
+      document.getElementById("hintButton").style.display = "inline-block";
+      document.getElementById("solutionButton").style.display = "inline-block";
+      document.getElementById("choiceButton").style.display = "none";
+    }
+
+    function showHint() {
+      document.getElementById("result").innerHTML += `<p><em>Hint: The total is ${currentSum}</em></p>`;
+      document.getElementById("hintButton").style.display = "none";
+      document.getElementById("choiceButton").style.display = "inline-block";
+    }
+
+    function showChoices() {
+      const options = [currentSum];
+      while (options.length < 4) {
+        const r = Math.floor(Math.random() * 47) + 1;
+        if (!options.includes(r)) options.push(r);
+      }
+      options.sort(() => Math.random() - 0.5);
+      let html = "<p><strong>Which president is number " + currentSum + "?</strong></p>";
+      options.forEach(opt => {
+        const pres = presidents.find(p => p.number === opt);
+        if (pres) {
+          html += `<button onclick="alert('${pres.name} is President #${opt}')">${pres.name}</button><br>`;
+        }
+      });
+      document.getElementById("result").innerHTML += html;
+      document.getElementById("choiceButton").style.display = "none";
+    }
+
+    function showSolution() {
+      const match = presidents.find(p => p.number === currentSum);
+      const html = `
+        <div style="display:flex;justify-content:center;gap:20px;">
+          <div><img src="${presidentImages[currentP1.number]}" alt=""><br><strong>${currentP1.name}</strong> (#${currentP1.number})</div>
+          <div style="font-size: 32px; font-weight: bold;">+</div>
+          <div><img src="${presidentImages[currentP2.number]}" alt=""><br><strong>${currentP2.name}</strong> (#${currentP2.number})</div>
+        </div>
+        <p><strong>Total:</strong> ${currentSum}</p>
+        ${
+          match
+            ? `<p><strong>Match:</strong> ${match.name} (#${match.number})</p><img src="${presidentImages[match.number]}" alt="">`
+            : "<p><strong>No president</strong> with that number.</p>"
+        }
+      `;
+      document.getElementById("result").innerHTML = html;
+      document.getElementById("solutionButton").style.display = "none";
+      document.getElementById("hintButton").style.display = "none";
+      document.getElementById("choiceButton").style.display = "none";
+    }
+  </script>
+</body>
+</html>
